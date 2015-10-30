@@ -1,0 +1,8 @@
+
+(load "2-2-3.scm")
+(define (sum-odd-squares tree)
+  (accumulate +
+	      0
+	      (map square
+		   (filter odd?
+			   (enumerate-tree tree)))))

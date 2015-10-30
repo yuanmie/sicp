@@ -1,0 +1,11 @@
+(define (lookup given-key tree-of-recodes)
+  (cond ((null? tree-of-recodes) false)
+	((equal? given-key (key (car tree-of-recodes)))
+	 (car tree-of-recodes))
+	((< given-key (key (car tree-of-recodes)))
+	 (lookup given-key (left-branch tree-of-recodes)))
+	((> given-key (key (car tree-of-recodes)))
+	 (lookup given-key (right-branch tree-of-recodes)))))
+
+(define (key record)
+  (car record))

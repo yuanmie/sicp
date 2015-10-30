@@ -1,0 +1,42 @@
+(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+	((variable? exp) (lookup-variable-value exp env))
+	((quoted? exp) (text-of-quotation exp))
+	((assignment? exp) (eval-assignment exp env))
+	((definition? exp) (eval-definition exp env))
+	((if? exp) (eval-if exp env))
+	((lambda? exp)
+	 (make-procedure (lambda-parameters exp)
+			 (lambda-body exp)
+			 env))
+	((begin? exp)
+	 (eval-sequence (begin-actions exp) env))
+	((cond? exp) (eval (cond->if exp) env))
+	((or? exp) (eval-or exp env))
+	((and? exp) (eval-and exp env))
+	((application? exp)
+	 (apply (eval (operator exp) env)
+		(list-of-values (operands exp) env)))
+	(else
+	 (error "Unknown expression type -- EVAL" exp))))
+
+(define (and? exp)
+  (tagged-list? exp 'and))
+
+(define (or? exp)
+  (tagged-list? exp 'or))
+
+(define (caluse exp) (cdr exp))
+(define (eval-or exp env)
+  (define (eval-or-iter e)
+    (if (true? (car e))
+	true
+	(eval-or-iter (cdr exp))))
+  (eval-or-iter (caluse exp)))
+
+(define (eval-and exp env)
+  (define (eval-and-iter e)
+    (if (false? (car e))
+	false
+	(eval-and-iter (cdr e))))
+  (eval-and-iter (caluse exp)))

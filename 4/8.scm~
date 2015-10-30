@@ -1,0 +1,54 @@
+(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+	((variable? exp) (lookup-variable-value exp env))
+	((quoted? exp) (text-of-quotation exp))
+	((assignment? exp) (eval-assignment exp env))
+	((definition? exp) (eval-definition exp env))
+	((if? exp) (eval-if exp env))
+	((let? exp) (eval (let->combination exp) env))
+	((lambda? exp)
+	 (make-procedure (lambda-parameters exp)
+			 (lambda-body exp)
+			 env))
+	((begin? exp)
+	 (eval-sequence (begin-actions exp) env))
+	((cond? exp) (eval (cond->if exp) env))
+	((application? exp)
+	 (apply (eval (operator exp) env)
+		(list-of-values (operands exp) env)))
+	(else
+	 (error "Unknown expression type -- EVAL" exp))))
+
+(define (let? exp) (tagged-list? exp 'let))
+
+(define (let-vars exp) (map car (cadr exp)))
+
+(define (let-inits exp) (map cadr (cadr exp)))
+
+(define (let-body exp) (cddr exp))
+
+(define (let->combination exp)
+  (if (named-let? exp)
+      (sequence-exp
+       (list (name-let->func exp)
+	     (cons (named-list-func-name exp) (named-let-func-inits exp))))
+  (cons (make-lambda (let-vars exp)
+		     (let-body exp))
+	(let-inits exp))))
+
+
+(define (named-let? exp)
+  (and (let? exp) (symbol? (cadr exp))))
+
+(define (named-let-func-name exp) (cadr exp))
+
+(define (named-let-func-body exp) (cadddr exp))
+
+(define (named-let-func-parameters exp) (map car (caddr exp)))
+
+(define (named-let-func-inits exp) (map cdr (caddr exp)))
+
+(define (named-let->func exp)
+  (list 'define
+	(cons (named-let-func-name exp) (named-let-func-parameters exp))
+	(named-let-func-body exp)))

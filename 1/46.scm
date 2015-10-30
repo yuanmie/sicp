@@ -1,0 +1,23 @@
+(load "common.scm")
+(define (iterative-improve good-enough? next-guess)
+	(define (iter y)
+			(if (good-enough?  y)
+				y
+				(iter (next-guess  y))))
+	(lambda (guess) (iter guess)))
+
+(define (mysqrt x)
+	(define (improve guess)
+			(average guess (/ x guess)))
+	(define (good-enough? guess)
+		(< (abs (- (square guess) x)) 0.001))
+	((iterative-improve good-enough? improve)
+	1.0))
+
+(define (fixed-point f first-guess)
+	(define (close-enough?  v2)
+		(< (abs (- (f v2) v2)) 0.00001))
+	(define (next-guess guess)
+			(f  guess))
+	((iterative-improve close-enough? next-guess)
+	first-guess))

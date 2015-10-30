@@ -1,0 +1,2 @@
+(define (add-streams a b) (stream-map + a b))
+(define (partial-sums s) (cons (stream-car s) (add-streams (stream-cdr s) s)))

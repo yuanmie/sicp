@@ -1,0 +1,26 @@
+(define (make-tree key value left-branch right-branch)
+  (list key value left-branch right-branch))
+
+(define (tree-key tree)
+  (car tree))
+
+(define (tree-vlaue tree)
+  (cadr tree))
+
+(define (tree-left-branch tree)
+  (caddr tree))
+
+(define (tree-right-branch tree)
+  (cadddr tree))
+
+(define (tree-empty? tree)
+  (null? tree))
+
+(define (tree-set-value! new-value tree)
+  (set-car! (car tree) new-value))
+
+(define (tree-set-left-branch! new-left-branch tree)
+  (set-car! (cddr tree) new-left-branch))
+
+(define (tree-set-right-branch! new-right-branch tree)
+  (set-car! (cdddr tree) new-right-branch))

@@ -1,0 +1,6 @@
+(load "38.scm")
+(define (reverse sequence)
+  (fold-right (lambda (x y) (cons x y)) () sequence))
+
+(define (reverse2 sequence)
+  (fold-left (lambda (x y) (cons y x)) () sequence))

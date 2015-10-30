@@ -1,0 +1,28 @@
+(define (insert! key-list value table)
+  (if (list? key-list)
+      (let ((current-key (car key-list))
+	    (remain-key (cdr key-list)))
+	(let ((record (assoc current-key (cdr table))))
+	  (cond
+					;1)has record and no keywords
+					;update value of record
+	   ((and record (null? remain-key))
+	    (set-cdr! record value)
+	    table)
+
+	   ;2)has record and has other keywords
+	   ;recursion insert!
+	   ((and record remain-key)
+	    (insert! remain-key value record)
+	    table)
+
+	    ;3) no record and has other keywords
+	   ((and (not record) (not (null? remain-key)))
+	    (join-in-table (insert! remain-key value (make-table current-key)) table)
+	    table)
+
+	   ((and (not record) (null? remain-key))
+	    (let ((new-record (cons current-key value)))
+	      (join-in-table new-record table)
+	      table)))))
+  (insert! (list key-list) value table)))

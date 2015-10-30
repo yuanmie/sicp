@@ -1,0 +1,21 @@
+(define (scan-out-defines body) 
+  (define (name-unassigned defines)
+    (map (lambda (x) (list (definition-variable x) '*unassigned*))
+	 defines))
+  (define (set-values defines)
+    (map (lambda (x)
+	   (list 'set! (definition-variable x) (definition-value x)))
+	 defines))
+  (define (defines->let exps defines not-defines)
+    (cond ((null? exps)
+	   (if (null? defines)
+	       body
+	       (list (list 'let (name-unassiged defines)
+			   (make-begin (append (set-values defines)
+					       (reverse not-defines)))))))
+	  ((definition? (car exps))
+	   (defines->let (cdr exps) (cons (car exps) defines) not-defines))
+	  (else
+	   (defines->let (cdr exps) defines (cons (car exps) not-defines)))))
+	     (defines->let body '() '()))
+  

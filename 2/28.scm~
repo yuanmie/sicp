@@ -1,0 +1,7 @@
+(define (fringe x)
+  (fringe-iter x ()))
+
+(define (fringe-iter x result)
+  (cond ((null? x) result)
+	((pair? x (cons x result)))
+	(else (cons (fringe-iter (car x) ()) (fringe-iter (cdr x ()))))))

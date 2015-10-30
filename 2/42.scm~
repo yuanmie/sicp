@@ -1,0 +1,33 @@
+(load "nest-map.scm")
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+	(list empty-board)
+	(filter
+	 (lambda (positions) (safe? k positions))
+	 (flatmap
+	  (lambda (rest-of-queens)
+	    (map (lambda (new-row)
+		   (adjoin-position new-row k rest-of-queens))
+		 (enumerate-interval 1 board-size)))
+	  (queen-cols (- k 1))))))
+  (queen-cols board-size))
+
+(define (adjoin-position new-row k rest-of-queens)
+  (append rest-of-queens (list new-row k)))
+
+(define empty-board ())
+
+(define (safe? k positions)
+  (let ((row (caar positions))
+	(col (cadar positions)))
+  (define (safe-iter row col seq)
+    (if (null? seq)
+	true
+	(
+	    (let ((test-row (caar seq))
+		  (test-col (cadar seq)))
+	      (if (or (= row test-row) (= col test-col) (= (abs (- row test-row)) (abs (- col test-col))))
+		  false
+		  (and true (safe-iter row col (cdr seq))))))))
+  (safe-iter row col (cdr positions))))

@@ -1,0 +1,6 @@
+(define (estimate-integral p x1 x2 y1 y2 times)
+  (* (area x1 x2 x3 x4) (monte-carlo times iner-test)))
+
+(define (random-in-range low high)
+  (let ((range (- high low)))
+    (+ low (random range))))

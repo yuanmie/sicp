@@ -1,0 +1,6 @@
+(define (make-joint account old-password own-password)
+  (lambda (given-password pwd mode)
+    (if (eq? pwd another-pasword)
+	(account old-password mode)
+	(display "Incorrect another password"))))
+

@@ -1,0 +1,6 @@
+(define (tree-map func tree)
+  (map (lambda (x)
+	 ((null? tree) ())
+	 ((not (pair? tree)) (func x))
+	 (else (tree-map func x)))
+       tree))

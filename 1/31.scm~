@@ -1,0 +1,15 @@
+(define (product term a next b)
+  (if (> a b)
+      0
+      (* (term a)
+	 (product term (next a) next b))))
+
+(define (f x)
+  (* (/ (- x 1) x)
+     (/ (+ x 1) x)))
+
+(define (next x)
+  (+ x 2))
+
+(define (getPI a b)
+  (product f a next b))

@@ -1,0 +1,18 @@
+(load "/home/likai/code/sicp/common/even.scm")
+(load "/home/likai/code/sicp/common/sum.scm")
+
+(define (simpson f a b n)
+  (define h (/ (- b a) n))
+  (define (factor k)
+    (cond ((or (= k 0) (= k n)) 1)
+	  ((even? k) 2)
+	  (else 4)))
+  (define (y k)
+    (f (+ a (* k h))))
+  (define (term k)
+    (* (factor k)
+       (y k)))
+  (define (next k)
+    (+ k 1))
+  (* (/ h 3) (sum term (+ a 0.0) next n)))
+

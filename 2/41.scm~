@@ -1,0 +1,23 @@
+(load "nest-map.scm")
+(define (make-pairs s)
+  (flatmap (lambda (i)
+	     (map (lambda (j)
+		    (map (lambda (k)
+			   (list i j k))
+			 (enumerate-interval 1 s)))
+		  (enumerate-interval 1 s)))
+	   (enumerate-interval 1 s)))
+
+(define (sum-equal-s? m s)
+  (= (+ (car m) (cadr m) (caddr m)) s))
+
+(define (each-other? m)
+  (let ((a (car m))
+	(b (cadr m))
+	(c (caddr m)))
+    (not (or (= a b) (= a c) (= b c)))))
+
+(define (make-pair-equal-s s)
+  (filter each-other?
+	  (filter (lambda (x) (sum-equal-s? x s))
+		  (make-pairs s))))

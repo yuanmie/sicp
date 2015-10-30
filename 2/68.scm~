@@ -1,0 +1,26 @@
+(load "67.scm")
+(define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+	      (encode (cdr message) tree))))
+
+(define (encode-symbol code tree)
+  (if (null? tree)
+      (error "code does not in this tree" code)
+      (let ((left (left-branch tree))
+	    (right (right-branch tree)))
+	(if (not (in? code (symbols tree)))
+	    (error "code does not in this tree" code)
+	    (cond ((leaf? tree) '())
+		  ((in? code (symbol left))
+		   (cons 0 (encode-symbol code left)))
+		  ((in? code (symbol right))
+		   (cons 1 (encode-symbol code right))))))))
+
+(define (in? x set)
+  (if (null? set)
+      false
+      (if (eq? x (car set))
+	  true
+	  (in? x (cdr set)))))

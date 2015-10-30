@@ -1,0 +1,14 @@
+(define (same-parity x . l)
+  (let ((a (remainder x 2)))
+    (same-parity-iter a l ())))
+
+(define (even? x)
+  (if (= (remainder x 2) 0)
+      #t
+      #f))
+
+(define (same-parity-iter a l result)
+  (let ((first (car l)))
+    (cond ((null? l) result)
+	  ((= a (even? first)) (same-parity-iter a (cdr l) (cons result first)))
+	  (else (same-parity-iter a (cdr l) result)))))

@@ -1,0 +1,3 @@
+(load "12.scm")
+(define A (make-center-width 10 1))
+(define B (make-center-width 25 2))
